@@ -1,74 +1,63 @@
 {% extends "base.html" %}
-{% block title %}
-<title>學生資料管理系統 - 刪除學生資料</title>
-<style>
-        h1,h3 {
-            text-align: center;
-        }
-        table, th, td{
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        table {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .head_content {
-            margin-bottom: 20px;
-        }
-    </style>    
-{% endblock %}
+{% block title %}刪除學生資料｜學生資料管理系統{% endblock %}
 
 {% block content %}
-<div class = "head_content">
-    <h1>學生資料管理系統-刪除學生資料</h1>
-    <h3><a href="{% url 'index' %}">回到首頁</a></h3>
-</div>
-<div>
-    {% comment %} <form action="/edit/{{ obj_data.cid }}/" method="POST"> {% endcomment %}
-    <form action="{% url 'delete' id=obj_data.cid %}" method="POST">
-        {% csrf_token %}
-        <table>
+<section class="page-header">
+    <div>
+        <h1>刪除學生資料</h1>
+        <p class="page-description">請確認資料正確；刪除後將無法復原。</p>
+    </div>
+    <div class="page-actions">
+        <a class="button button-secondary" href="{% url 'index' %}">取消並回到首頁</a>
+    </div>
+</section>
+
+<form class="card form-card" action="{% url 'delete' id=obj_data.cid %}" method="POST">
+    {% csrf_token %}
+    <table class="form-table">
+        <tbody>
             <tr>
-                <th>姓名</th><td>{{ obj_data.cname }}</td>
+                <th>學號</th>
+                <td>{{ obj_data.cid }}</td>
+            </tr>
+            <tr>
+                <th>姓名</th>
+                <td>{{ obj_data.cname }}</td>
             </tr>
             <tr>
                 <th>性別</th>
-                <td>
-                    {% if obj_data.csex == "M" %}
-                        男
-                    {% else %}
-                        女
-                    {% endif %}
+                <td>{% if obj_data.csex == "M" %}男{% else %}女{% endif %}</td>
+            </tr>
+            <tr>
+                <th>生日</th>
+                <td>{{ obj_data.cbirthday|date:'Y-m-d' }}</td>
+            </tr>
+            <tr>
+                <th>信箱</th>
+                <td>{{ obj_data.cemail }}</td>
+            </tr>
+            <tr>
+                <th>電話</th>
+                <td>{{ obj_data.cphone }}</td>
+            </tr>
+            <tr>
+                <th>地址</th>
+                <td>{{ obj_data.caddr }}</td>
+            </tr>
+            <tr>
+                <td class="actions-cell" colspan="2">
+                    <div class="button-row form-actions">
+                        <input class="button-danger" type="submit" value="確認刪除">
+                    </div>
                 </td>
             </tr>
-            <tr>
-                <th>生日</th><td>{{ obj_data.cbirthday|date:'Y-m-d' }}"></td>
-            </tr>
-            <tr>
-                <th>信箱</th><td>{{ obj_data.cemail }}</td>
-            </tr>
-            <tr>
-                <th>&nbsp;&nbsp;電話</th><td>{{ obj_data.cphone }}</td>
-            </tr>
-            <tr>
-                <th>&nbsp;&nbsp;地址</th><td>{{ obj_data.caddr }}</td>
-            </tr>
-            <tr>
-                <th colspan="2" style="text-align:center;">
-                    <input type="submit" name="button" id="button" value="刪除">
-                </th>
-
-            </tr>
-        </table>
-
-    </form>
-</div>
+        </tbody>
+    </table>
+</form>
 
 <script>
-    // 可以在這裡加入一些 JavaScript 代碼，例如確認刪除提示
     document.querySelector('form').addEventListener('submit', function(event) {
-        if(!confirm('確定要刪除這筆資料嗎？')) {
+        if (!confirm('確定要刪除這筆學生資料嗎？')) {
             event.preventDefault();
         }
     });

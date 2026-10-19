@@ -1,65 +1,57 @@
 {% extends "base.html" %}
-{% block title %}
-<title>學生資料管理系統 - 新增學生資料</title>
-<style>
-        h1,h3 {
-            text-align: center;
-        }
-        table, th, td{
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        table {
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .head_content {
-            margin-bottom: 20px;
-        }
-    </style>    
-{% endblock %}
+{% block title %}新增學生資料｜學生資料管理系統{% endblock %}
 
 {% block content %}
-<div class = "head_content">
-    <h1>學生資料管理系統-新增學生資料</h1>
-    <h3><a href="{% url 'index' %}">回到首頁</a></h3>
-</div>
-<div>
-    {% comment %} <form action="/post/" method="POST"> {% endcomment %}
-    <form action="{% url 'post' %}" method="POST">
-        {% csrf_token %}
-        <table>
+<section class="page-header">
+    <div>
+        <h1>新增學生資料</h1>
+        <p class="page-description">填寫以下欄位以建立新的學生資料。</p>
+    </div>
+    <div class="page-actions">
+        <a class="button button-secondary" href="{% url 'index' %}">回到首頁</a>
+    </div>
+</section>
+
+<form class="card form-card" action="{% url 'post' %}" method="POST">
+    {% csrf_token %}
+    <table class="form-table">
+        <tbody>
             <tr>
-                <th>*姓名</th><td><input type="text" id="cname" name="cname" required placeholder="請輸入姓名"></td>
+                <th><label for="cname">*姓名</label></th>
+                <td><input type="text" id="cname" name="cname" required placeholder="請輸入姓名"></td>
             </tr>
             <tr>
-                <th>*性別</th>
+                <th>性別</th>
                 <td>
-                    <input type="radio" id="csex_m" name="csex" value="M" checked>男
-                    <input type="radio" id="csex_f" name="csex" value="F">女
+                    <label for="csex_m"><input type="radio" id="csex_m" name="csex" value="M" checked>男</label>
+                    <label for="csex_f"><input type="radio" id="csex_f" name="csex" value="F">女</label>
                 </td>
             </tr>
             <tr>
-                <th>*生日</th><td><input type="date" id="cbirthday" name="cbirthday" required></td>
+                <th><label for="cbirthday">*生日</label></th>
+                <td><input type="date" id="cbirthday" name="cbirthday" required></td>
             </tr>
             <tr>
-                <th>*信箱</th><td><input type="email" id="cemail" name="cemail" required placeholder="請輸入mail"></td>
+                <th><label for="cemail">*信箱</label></th>
+                <td><input type="email" id="cemail" name="cemail" required placeholder="請輸入電子郵件"></td>
             </tr>
             <tr>
-                <th>&nbsp;&nbsp;電話</th><td><input type="text" id="cphone" name="cphone"></td>
+                <th><label for="cphone">電話</label></th>
+                <td><input type="text" id="cphone" name="cphone"></td>
             </tr>
             <tr>
-                <th>&nbsp;&nbsp;地址</th><td><input type="text" id="caddr" name="caddr"></td>
+                <th><label for="caddr">地址</label></th>
+                <td><input type="text" id="caddr" name="caddr"></td>
             </tr>
             <tr>
-                <th colspan="2" style="text-align:center;">
-                    <input type="submit" name="button" id="button" value="儲存">
-                    <input type="reset" name="button2" id="button2" value="清除">
-                </th>
-
+                <td class="actions-cell" colspan="2">
+                    <div class="button-row form-actions">
+                        <input type="reset" value="清除">
+                        <input type="submit" value="儲存資料">
+                    </div>
+                </td>
             </tr>
-        </table>
-
-    </form>
-</div>
+        </tbody>
+    </table>
+</form>
 {% endblock %}

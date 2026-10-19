@@ -1,22 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>{{errormessgae}}</h1>
-    {% for data in resultList %}
-    <h2> 顯示student資料表的資料 </h2>
-    <p>學號: {{ data.cid }}</p>
-    <p>姓名: {{ data.cname }}</p>
-    <p>性別: {{ data.csex }}</p>
-    <p>生日: {{ data.cbirthday }}</p>
-    <p>郵件: {{ data.cemail }}</p>
-    <p>電話: {{ data.cphone }}</p>
-    <p>地址: {{ data.caddr }}</p>
-    
-    {% endfor %}
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}搜尋結果｜學生資料管理系統{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>搜尋結果</h1>
+        <p class="page-description">
+            {% if request.GET.cname %}姓名包含「{{ request.GET.cname }}」的學生資料{% else %}所有學生資料{% endif %}
+        </p>
+    </div>
+    <div class="page-actions">
+        <a class="button button-secondary" href="{% url 'index' %}">回到首頁</a>
+        <a class="button" href="{% url 'search_name' %}">重新搜尋</a>
+    </div>
+</section>
+
+<section class="card">
+    {% if resultList %}
+    <div class="table-scroll">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>學號</th>
+                    <th>姓名</th>
+                    <th>性別</th>
+                    <th>生日</th>
+                    <th>信箱</th>
+                    <th>電話</th>
+                    <th>地址</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in resultList %}
+                <tr>
+                    <td>{{ data.cid }}</td>
+                    <td>{{ data.cname }}</td>
+                    <td>{% if data.csex == "M" %}男{% else %}女{% endif %}</td>
+                    <td>{{ data.cbirthday|date:'Y-m-d' }}</td>
+                    <td>{{ data.cemail }}</td>
+                    <td>{{ data.cphone }}</td>
+                    <td>{{ data.caddr }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">{{ errormessgae|default:"查無資料" }}</p>
+    {% endif %}
+</section>
+{% endblock %}

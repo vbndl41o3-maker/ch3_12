@@ -1,13 +1,404 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    {% block title %}{% endblock %}
+    <meta name="theme-color" content="#f4f7fb">
+    <title>{% block title %}學生資料管理系統{% endblock %}</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #172033;
+            --muted: #64748b;
+            --brand: #2563eb;
+            --brand-dark: #1d4ed8;
+            --surface: #ffffff;
+            --line: #e2e8f0;
+            --background: #f4f7fb;
+            --danger: #dc2626;
+            --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: var(--background);
+            color: var(--ink);
+            font-family: "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--brand-dark);
+            text-decoration: underline;
+        }
+
+        .site-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .header-inner,
+        .page-shell,
+        .site-footer {
+            width: min(1160px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .header-inner {
+            display: flex;
+            min-height: 72px;
+            align-items: center;
+        }
+
+        .brand {
+            color: var(--ink);
+            font-size: 1.1rem;
+            font-weight: 750;
+            letter-spacing: 0.02em;
+        }
+
+        .brand:hover {
+            color: var(--brand);
+            text-decoration: none;
+        }
+
+        .page-shell {
+            padding: 44px 0 56px;
+        }
+
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: clamp(1.6rem, 3vw, 2rem);
+            line-height: 1.3;
+        }
+
+        .page-description {
+            margin: 8px 0 0;
+            color: var(--muted);
+        }
+
+        .page-actions,
+        .search-form,
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+        }
+
+        .card-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .record-count {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .record-count strong {
+            color: var(--ink);
+            font-size: 1.15rem;
+        }
+
+        .search-form label {
+            color: var(--muted);
+            font-size: 0.92rem;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"] {
+            min-height: 42px;
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: var(--surface);
+            color: var(--ink);
+            font: inherit;
+        }
+
+        input:focus {
+            border-color: var(--brand);
+            outline: 3px solid rgba(37, 99, 235, 0.15);
+        }
+
+        .search-form input[type="text"] {
+            width: min(280px, 100%);
+        }
+
+        button,
+        input[type="submit"],
+        input[type="reset"],
+        .button {
+            display: inline-flex;
+            min-height: 40px;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 15px;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            background: var(--brand);
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 650;
+            transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
+        }
+
+        button:hover,
+        input[type="submit"]:hover,
+        .button:hover {
+            background: var(--brand-dark);
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        input[type="reset"],
+        .button-secondary {
+            border-color: var(--line);
+            background: #fff;
+            color: var(--ink);
+        }
+
+        input[type="reset"]:hover,
+        .button-secondary:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: var(--ink);
+        }
+
+        .button-danger {
+            background: var(--danger);
+        }
+
+        .button-danger:hover {
+            background: #b91c1c;
+        }
+
+        .button-small {
+            min-height: 32px;
+            padding: 4px 10px;
+            font-size: 0.88rem;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .form-actions {
+            justify-content: flex-end;
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+        }
+
+        .data-table,
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table {
+            min-width: 760px;
+        }
+
+        .data-table th,
+        .data-table td,
+        .form-table th,
+        .form-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+        }
+
+        .data-table th,
+        .form-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .data-table tbody tr:last-child td,
+        .form-table tr:last-child th,
+        .form-table tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .form-card {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .form-table th {
+            width: 150px;
+            white-space: nowrap;
+        }
+
+        .form-table td input[type="text"],
+        .form-table td input[type="email"],
+        .form-table td input[type="date"] {
+            width: min(100%, 420px);
+        }
+
+        .form-table input[type="radio"] {
+            margin: 0 5px 0 0;
+            accent-color: var(--brand);
+        }
+
+        .form-table td label {
+            margin-right: 16px;
+        }
+
+        .form-table .actions-cell {
+            text-align: right;
+        }
+
+        .pagination {
+            justify-content: center;
+            padding: 20px 24px;
+        }
+
+        .pagination a,
+        .pagination span {
+            display: inline-flex;
+            min-width: 38px;
+            min-height: 38px;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+        }
+
+        .pagination a:hover,
+        .pagination .current {
+            border-color: var(--brand);
+            background: var(--brand);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .pagination .disabled {
+            color: #94a3b8;
+        }
+
+        .empty-state {
+            margin: 0;
+            padding: 40px 24px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .site-footer {
+            padding: 0 0 28px;
+            color: #94a3b8;
+            font-size: 0.88rem;
+            text-align: center;
+        }
+
+        @media (max-width: 640px) {
+            .header-inner,
+            .page-shell,
+            .site-footer {
+                width: min(100% - 28px, 1160px);
+            }
+
+            .page-shell {
+                padding: 30px 0 40px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+            }
+
+            .card-toolbar {
+                align-items: stretch;
+                padding: 18px;
+            }
+
+            .search-form {
+                align-items: stretch;
+            }
+
+            .search-form label {
+                width: 100%;
+            }
+
+            .search-form input[type="text"] {
+                flex: 1 1 180px;
+            }
+
+            .form-card {
+                padding: 14px;
+            }
+
+            .form-table th,
+            .form-table td {
+                padding: 12px 10px;
+            }
+
+            .form-table th {
+                width: 92px;
+            }
+        }
+    </style>
 </head>
 <body>
-    {% block content %}{% endblock %}
-    <h3>以載入樣板</h3>
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="{% url 'index' %}">學生資料管理系統</a>
+        </div>
+    </header>
+    <main class="page-shell">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">學生資料管理系統</footer>
 </body>
 </html>

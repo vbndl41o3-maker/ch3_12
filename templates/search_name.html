@@ -1,16 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {% comment  %}<form action= "/search_list/" method="get">{% endcomment %}
-    <form action="/search_name/" method="get">
-        <label for "cname">姓名:</label>
-        <input type="text" id="cname" name="cname">
-        <button type="submit">搜尋</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}依姓名搜尋｜學生資料管理系統{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>依姓名搜尋</h1>
+        <p class="page-description">輸入姓名或部分姓名，尋找學生資料。</p>
+    </div>
+    <div class="page-actions">
+        <a class="button button-secondary" href="{% url 'index' %}">回到首頁</a>
+    </div>
+</section>
+
+<form class="card form-card" action="{% url 'search_list' %}" method="GET">
+    <table class="form-table">
+        <tbody>
+            <tr>
+                <th><label for="cname">姓名</label></th>
+                <td><input type="text" id="cname" name="cname" required placeholder="請輸入姓名"></td>
+            </tr>
+            <tr>
+                <td class="actions-cell" colspan="2">
+                    <div class="button-row form-actions">
+                        <button type="submit">搜尋學生</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+{% endblock %}
